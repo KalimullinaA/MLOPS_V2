@@ -24,6 +24,9 @@ stages:
     - data/stage2/y_test.npy
     - data/stage2/y_train.npy
     - scripts/model_preparation.py
+    params:
+    - train.C
+    - train.penalty
     outs:
     - models/model.pkl
   model_testing:

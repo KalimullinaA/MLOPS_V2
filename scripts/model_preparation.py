@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 import pickle
+import yaml
 
 
 with open('data/stage2/X_train.npy', 'rb') as f:
@@ -14,12 +15,14 @@ with open('data/stage2/y_test.npy', 'rb') as f:
     y_test = np.load(f, allow_pickle=True)
 
 
-penalty= 'l1' #@param [ "l2" , "l1", "none"]{type:"string"}
-regularization = 7.5 #@param {type:"slider", min:0, max:10, step:0.05}
+params = yaml.safe_load(open("params.yaml"))["train"]
+penalty= params["penalty"]
+p_c= params["C"]
+
 
 model = LogisticRegression(fit_intercept=True,
                             penalty=penalty,solver='liblinear',
-                            C=regularization,
+                            C=p_c,
                             max_iter=10000)
 model.fit(X_train, y_train)
 
