@@ -6,9 +6,9 @@ import numpy as np
 
 
 with open('data/stage2/X_test.npy', 'rb') as f:
-    X_test = np.load(f)
+    X_test = np.load(f, allow_pickle=True)
 with open('data/stage2/y_test.npy', 'rb') as f:
-    y_test = np.load(f)
+    y_test = np.load(f, allow_pickle=True)
 model = pickle.load(open('models/model.pkl', 'rb'))
 
 

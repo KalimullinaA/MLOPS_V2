@@ -1,0 +1,92 @@
+schema: '2.0'
+stages:
+  data_creation:
+    cmd: python3 scripts/data_creation.py data/df.csv
+    deps:
+    - path: data/df.csv
+      hash: md5
+      md5: daf4e295391cc93b174b3824761ac362
+      size: 352622
+    - path: scripts/data_creation.py
+      hash: md5
+      md5: 6fd3be93d2dede15ed6006825b071bd9
+      size: 306
+    outs:
+    - path: data/stage1
+      hash: md5
+      md5: f3ecca8e01f3ec211a47fd0088f5d344.dir
+      size: 216664
+      nfiles: 1
+  data_preprocessing:
+    cmd: python3 scripts/data_preprocessing.py data/stage1/new_df.csv
+    deps:
+    - path: data/stage1/new_df.csv
+      hash: md5
+      md5: 5025d7a8aa5640cff488417f502fa05d
+      size: 216664
+    - path: scripts/data_preprocessing.py
+      hash: md5
+      md5: 923011cd602b8baa2aee44afa4f89475
+      size: 1533
+    params:
+      params.yaml:
+        split.split_ratio: 0.8
+    outs:
+    - path: data/stage2
+      hash: md5
+      md5: 321ec89f3e3726baba019526b3703f57.dir
+      size: 4518718
+      nfiles: 4
+  model_preparation:
+    cmd: python3 scripts/model_preparation.py data/stage2/X_train.npy data/stage2/y_train.npy
+      data/stage2/X_test.npy data/stage2/y_test.npy
+    deps:
+    - path: data/stage2/X_test.npy
+      hash: md5
+      md5: e5865fb108905e091c9f8a52d4cc508e
+      size: 3596780
+    - path: data/stage2/X_train.npy
+      hash: md5
+      md5: 1308cdf75e6969740a3ff90b234d1fe1
+      size: 898258
+    - path: data/stage2/y_test.npy
+      hash: md5
+      md5: 15d33b23bf4fb8c0c17646903d4e2658
+      size: 18872
+    - path: data/stage2/y_train.npy
+      hash: md5
+      md5: 5657a14bb866401b1e16c1cb724d0a63
+      size: 4808
+    - path: scripts/model_preparation.py
+      hash: md5
+      md5: ae569b0fac8261657d7daa14434dbaa5
+      size: 907
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 133a2c0de4da09f3ed8988fbdf945269
+      size: 12702
+  model_testing:
+    cmd: python3 scripts/model_testing.py
+    deps:
+    - path: data/stage2/X_test.npy
+      hash: md5
+      md5: e5865fb108905e091c9f8a52d4cc508e
+      size: 3596780
+    - path: data/stage2/y_test.npy
+      hash: md5
+      md5: 15d33b23bf4fb8c0c17646903d4e2658
+      size: 18872
+    - path: models/model.pkl
+      hash: md5
+      md5: 133a2c0de4da09f3ed8988fbdf945269
+      size: 12702
+    - path: scripts/model_testing.py
+      hash: md5
+      md5: 447f94bba54d8e97f06e5fb9158a1e4e
+      size: 501
+    outs:
+    - path: evaluate/score.json
+      hash: md5
+      md5: fe1ee8a15501f75f87953f388ba39873
+      size: 29

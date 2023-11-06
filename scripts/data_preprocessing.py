@@ -2,8 +2,16 @@ import pandas as pd
 import os
 from sklearn.model_selection import train_test_split
 import numpy as np
+import yaml
+from sklearn.pipeline import Pipeline # Pipeline.Не добавить, не убавить
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler # Импортируем нормализацию и One-Hot Encoding от sklearn
+from sklearn.compose import ColumnTransformer # т.н. преобразователь колонок
+
 
 df = pd.read_csv('data/stage1/new_df.csv')
+
+params = yaml.safe_load(open("params.yaml"))["split"]
+p_split_ratio = params["split_ratio"]
 
 cat_columns = []
 num_columns = []
@@ -22,7 +30,7 @@ df.drop(columns=['id', 'code', 'Country', 'period'], inplace=True)
 
 
 X, y = df.drop(columns = ['polution_clf']).values, df['polution_clf'].values
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.8, random_state=120)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=p_split_ratio, random_state=120)
 
 os.makedirs(os.path.join("data", "stage2"),exist_ok=True)
 
@@ -34,7 +42,3 @@ with open('data/stage2/y_train.npy', 'wb') as f:
     np.save(f, y_train)
 with open('data/stage2/y_test.npy', 'wb') as f:
     np.save(f, y_test)
-# X_train.to_csv('data/stage2/X_train.csv', index=False)
-# X_test.to_csv('data/stage2/X_test.csv', index=False)
-# y_train.to_csv('data/stage2/y_train.csv', index=False)
-# y_test.to_csv('data/stage2/y_test.csv', index=False)

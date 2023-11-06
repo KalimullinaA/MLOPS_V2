@@ -1,0 +1,38 @@
+stages:
+  data_creation:
+    cmd: python3 scripts/data_creation.py data/df.csv
+    deps:
+    - data/df.csv
+    - scripts/data_creation.py
+    outs:
+    - data/stage1
+  data_preprocessing:
+    cmd: python3 scripts/data_preprocessing.py data/stage1/new_df.csv
+    deps:
+    - data/stage1/new_df.csv
+    - scripts/data_preprocessing.py
+    params:
+    - split.split_ratio
+    outs:
+    - data/stage2
+  model_preparation:
+    cmd: python3 scripts/model_preparation.py data/stage2/X_train.npy data/stage2/y_train.npy
+      data/stage2/X_test.npy data/stage2/y_test.npy
+    deps:
+    - data/stage2/X_test.npy
+    - data/stage2/X_train.npy
+    - data/stage2/y_test.npy
+    - data/stage2/y_train.npy
+    - scripts/model_preparation.py
+    outs:
+    - models/model.pkl
+  model_testing:
+    cmd: python3 scripts/model_testing.py
+    deps:
+    - data/stage2/X_test.npy
+    - data/stage2/y_test.npy
+    - scripts/model_testing.py
+    - models/model.pkl
+    metrics:
+    - evaluate/score.json:
+        cache: false

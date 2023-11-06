@@ -5,13 +5,13 @@ import pickle
 
 
 with open('data/stage2/X_train.npy', 'rb') as f:
-    X_train = np.load(f)
+    X_train = np.load(f, allow_pickle=True)
 with open('data/stage2/y_train.npy', 'rb') as f:
-    y_train = np.load(f)
+    y_train = np.load(f, allow_pickle=True)
 with open('data/stage2/X_test.npy', 'rb') as f:
-    X_test = np.load(f)
+    X_test = np.load(f, allow_pickle=True)
 with open('data/stage2/y_test.npy', 'rb') as f:
-    y_test = np.load(f)
+    y_test = np.load(f, allow_pickle=True)
 
 
 penalty= 'l1' #@param [ "l2" , "l1", "none"]{type:"string"}
